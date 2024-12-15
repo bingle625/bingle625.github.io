@@ -1,4 +1,9 @@
-
+---
+layout: post
+title:  "맥 환경에서 ruby, jekyll, bundler 설치하기 (sudo 쓰면 안됨)"
+date:   2024-12-15 16:16:14 +0900
+categories: github blog
+---
 ## 문제 상황
 
 ```
