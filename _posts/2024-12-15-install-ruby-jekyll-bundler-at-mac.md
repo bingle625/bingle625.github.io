@@ -47,14 +47,12 @@ $ rbenv init
 # zsh 사용한다면, zshrc, 아니라면 bashrc 사용하는 terminal 환경에 맞게 수정
 $ vi ~/.zshrc
 ```
-
-![[Pasted image 20241215154726.png]]
-
+![](../images/Pasted%20image%2020241215175655.png)
 ### 2. ruby 설치
 이제 ruby 를 설치하자.
 ruby는 stable 한 버전중에 가장 최신 버전을 설치해주면 된다.
 
-![[Pasted image 20241215155834.png]]
+![](../images/Pasted%20image%2020241215180049.png)
 
 3.3.6이 가장 최신 버전으로 보였기 때문에, 해당 버전을 설치해줬다.
 
