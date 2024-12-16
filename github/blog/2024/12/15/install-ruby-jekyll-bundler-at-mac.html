@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>맥 환경에서 ruby, jekyll, bundler 설치하기 (sudo 쓰면 안됨) | BingleLog</title>
+<meta name="generator" content="Jekyll v4.3.4" />
+<meta property="og:title" content="맥 환경에서 ruby, jekyll, bundler 설치하기 (sudo 쓰면 안됨)" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="문제 상황" />
+<meta property="og:description" content="문제 상황" />
+<link rel="canonical" href="http://localhost:4000/github/blog/2024/12/15/install-ruby-jekyll-bundler-at-mac.html" />
+<meta property="og:url" content="http://localhost:4000/github/blog/2024/12/15/install-ruby-jekyll-bundler-at-mac.html" />
+<meta property="og:site_name" content="BingleLog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-12-15T16:16:14+09:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="맥 환경에서 ruby, jekyll, bundler 설치하기 (sudo 쓰면 안됨)" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-12-15T16:16:14+09:00","datePublished":"2024-12-15T16:16:14+09:00","description":"문제 상황","headline":"맥 환경에서 ruby, jekyll, bundler 설치하기 (sudo 쓰면 안됨)","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/github/blog/2024/12/15/install-ruby-jekyll-bundler-at-mac.html"},"url":"http://localhost:4000/github/blog/2024/12/15/install-ruby-jekyll-bundler-at-mac.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="BingleLog" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">BingleLog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">맥 환경에서 ruby, jekyll, bundler 설치하기 (sudo 쓰면 안됨)</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-12-15T16:16:14+09:00" itemprop="datePublished">Dec 15, 2024
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="문제-상황">문제 상황</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># You don't have write permissions for the /Library/Ruby/Gems/...
+</code></pre></div></div>
+
+<p><strong>맥</strong>에서는 기본으로 시스템에서 의존하고 있는 ruby가 있다.
+문제는 해당 루비의 버전이 낮은 편이기 때문에, 해당 환경에서 바로 bundler 나 jekyll을 설치하면 정상적으로 설치되지 않는다.</p>
+
+<p>의존성 문제가 발생하기도 하고, 의존성에 맞게 bundler나 jekyll의 버전을 조정하여 설치하려고 하여도 ruby의 라이브러리를 저장하는 디렉토리에 쓰기 권한 문제가 발생한다.</p>
+
+<p>해당 권한 문제를 해결하기 위해 섣불리 sudo 등의 명령어를 쓰게 되면, 시스템에서 사용하는 ruby에 어떤 문제가 발생할지 모르기 때문에, 우리는 다른 해결 방식을 채택해야 한다.</p>
+
+<p>아래 스택오버 플로우 이슈의 경우가 나와 동일한 이슈였는데, comment에서 실제로 sudo로 그냥 권한 바꿔버리라는 무책임한 이야기를 하지만, 첫 답변에서 다른 해결책을 제시해준다.</p>
+
+<p><a href="https://stackoverflow.com/questions/51126403/you-dont-have-write-permissions-for-the-library-ruby-gems-2-3-0-directory-ma">내 문제와 동일했던 이슈</a></p>
+
+<h2 id="해결책">해결책</h2>
+<p>따라서, rbenv, rvm 과 같은 ruby 버전 매니저로 별도의 ruby 설치해준 후, cli 환경에서 해당 ruby를 사용하도록 하여, gem으로 bundler, jekyll 패키지를 설치해야한다.</p>
+
+<h3 id="1-rbenv-설치">1. rbenv 설치</h3>
+
+<p>나는 brew를 사용했고, 다른 것을 사용해도 상관은 없다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ brew install rbenv 
+
+# cli 환경에서 rbenv init 되도록 수정
+$ rbenv init
+</code></pre></div></div>
+
+<p>rbenv init 은 쉘(cli)를 초기화 할때마다 실행시켜 주어야 하는 것으로 보이므로, rc파일(.zshrc or .bashrc) 에 해당 스크립트를 넣어주도록 하자.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 실행 시 zshrc, 혹은 bashrc에 rbenv를 cli 환경에 hook 해주는 스크립트가 맨 아래에 추가된다. (이미지 참고)
+$ rbenv init
+</code></pre></div></div>
+
+<p>만약 위 스크립트로 제대로 실행이 되지 않았다면, zshrc or bashrc 를 직접 수정해서 이미지에 해당하는 스크립트를 추가하자.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># zsh 사용한다면, zshrc, 아니라면 bashrc 사용하는 terminal 환경에 맞게 수정
+$ vi ~/.zshrc
+</code></pre></div></div>
+<p><img src="/images/Pasted%20image%2020241215175655.png" alt="Pasted%20image%2020241215175655.png" /></p>
+<h3 id="2-ruby-설치">2. ruby 설치</h3>
+<p>이제 ruby 를 설치하자.
+ruby는 stable 한 버전중에 가장 최신 버전을 설치해주면 된다.</p>
+
+<p><img src="/images/Pasted%20image%2020241215180049.png" alt="Pasted%20image%2020241215180049.png" /></p>
+
+<p>3.3.6이 가장 최신 버전으로 보였기 때문에, 해당 버전을 설치해줬다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rbenv install 3.3.6
+
+# 설치한 ruby의 버전을 cli 환경에서 기본으로 설정
+$ rbenv global 3.3.6
+
+# 버전 변경 되었는지 확인 후, 되지 않았다면 터미널 껐다 켜기
+$ rbenv --version
+</code></pre></div></div>
+
+<h3 id="3-bundler-jekyll-설치하기">3. bundler, jekyll 설치하기</h3>
+
+<p>이제, 제대로 설치가 될것이다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rbenv install bundler
+
+$ rbenv install jekyll
+</code></pre></div></div>
+
+<p>이후로는 bundler를 이용해서 테마를 수정하고, jekyll로 배포 하면서 블로그를 시작하면 된다.</p>
+
+  </div><a class="u-url" href="/github/blog/2024/12/15/install-ruby-jekyll-bundler-at-mac.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">BingleLog</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">BingleLog</li><li><a class="u-email" href="mailto:fhqhxm8899@gmail.com">fhqhxm8899@gmail.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/bingle625"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">bingle625</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2024-12-16T14:33:52+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">BingleLog</title><subtitle>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</subtitle><entry><title type="html">맥 환경에서 ruby, jekyll, bundler 설치하기 (sudo 쓰면 안됨)</title><link href="http://localhost:4000/github/blog/2024/12/15/install-ruby-jekyll-bundler-at-mac.html" rel="alternate" type="text/html" title="맥 환경에서 ruby, jekyll, bundler 설치하기 (sudo 쓰면 안됨)" /><published>2024-12-15T16:16:14+09:00</published><updated>2024-12-15T16:16:14+09:00</updated><id>http://localhost:4000/github/blog/2024/12/15/install-ruby-jekyll-bundler-at-mac</id><content type="html" xml:base="http://localhost:4000/github/blog/2024/12/15/install-ruby-jekyll-bundler-at-mac.html"><![CDATA[<h2 id="문제-상황">문제 상황</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># You don't have write permissions for the /Library/Ruby/Gems/...
+</code></pre></div></div>
+
+<p><strong>맥</strong>에서는 기본으로 시스템에서 의존하고 있는 ruby가 있다.
+문제는 해당 루비의 버전이 낮은 편이기 때문에, 해당 환경에서 바로 bundler 나 jekyll을 설치하면 정상적으로 설치되지 않는다.</p>
+
+<p>의존성 문제가 발생하기도 하고, 의존성에 맞게 bundler나 jekyll의 버전을 조정하여 설치하려고 하여도 ruby의 라이브러리를 저장하는 디렉토리에 쓰기 권한 문제가 발생한다.</p>
+
+<p>해당 권한 문제를 해결하기 위해 섣불리 sudo 등의 명령어를 쓰게 되면, 시스템에서 사용하는 ruby에 어떤 문제가 발생할지 모르기 때문에, 우리는 다른 해결 방식을 채택해야 한다.</p>
+
+<p>아래 스택오버 플로우 이슈의 경우가 나와 동일한 이슈였는데, comment에서 실제로 sudo로 그냥 권한 바꿔버리라는 무책임한 이야기를 하지만, 첫 답변에서 다른 해결책을 제시해준다.</p>
+
+<p><a href="https://stackoverflow.com/questions/51126403/you-dont-have-write-permissions-for-the-library-ruby-gems-2-3-0-directory-ma">내 문제와 동일했던 이슈</a></p>
+
+<h2 id="해결책">해결책</h2>
+<p>따라서, rbenv, rvm 과 같은 ruby 버전 매니저로 별도의 ruby 설치해준 후, cli 환경에서 해당 ruby를 사용하도록 하여, gem으로 bundler, jekyll 패키지를 설치해야한다.</p>
+
+<h3 id="1-rbenv-설치">1. rbenv 설치</h3>
+
+<p>나는 brew를 사용했고, 다른 것을 사용해도 상관은 없다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ brew install rbenv 
+
+# cli 환경에서 rbenv init 되도록 수정
+$ rbenv init
+</code></pre></div></div>
+
+<p>rbenv init 은 쉘(cli)를 초기화 할때마다 실행시켜 주어야 하는 것으로 보이므로, rc파일(.zshrc or .bashrc) 에 해당 스크립트를 넣어주도록 하자.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 실행 시 zshrc, 혹은 bashrc에 rbenv를 cli 환경에 hook 해주는 스크립트가 맨 아래에 추가된다. (이미지 참고)
+$ rbenv init
+</code></pre></div></div>
+
+<p>만약 위 스크립트로 제대로 실행이 되지 않았다면, zshrc or bashrc 를 직접 수정해서 이미지에 해당하는 스크립트를 추가하자.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># zsh 사용한다면, zshrc, 아니라면 bashrc 사용하는 terminal 환경에 맞게 수정
+$ vi ~/.zshrc
+</code></pre></div></div>
+<p><img src="/images/Pasted%20image%2020241215175655.png" alt="Pasted%20image%2020241215175655.png" /></p>
+<h3 id="2-ruby-설치">2. ruby 설치</h3>
+<p>이제 ruby 를 설치하자.
+ruby는 stable 한 버전중에 가장 최신 버전을 설치해주면 된다.</p>
+
+<p><img src="/images/Pasted%20image%2020241215180049.png" alt="Pasted%20image%2020241215180049.png" /></p>
+
+<p>3.3.6이 가장 최신 버전으로 보였기 때문에, 해당 버전을 설치해줬다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rbenv install 3.3.6
+
+# 설치한 ruby의 버전을 cli 환경에서 기본으로 설정
+$ rbenv global 3.3.6
+
+# 버전 변경 되었는지 확인 후, 되지 않았다면 터미널 껐다 켜기
+$ rbenv --version
+</code></pre></div></div>
+
+<h3 id="3-bundler-jekyll-설치하기">3. bundler, jekyll 설치하기</h3>
+
+<p>이제, 제대로 설치가 될것이다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rbenv install bundler
+
+$ rbenv install jekyll
+</code></pre></div></div>
+
+<p>이후로는 bundler를 이용해서 테마를 수정하고, jekyll로 배포 하면서 블로그를 시작하면 된다.</p>]]></content><author><name></name></author><category term="github" /><category term="blog" /><summary type="html"><![CDATA[문제 상황]]></summary></entry><entry><title type="html">Welcome to Jekyll!</title><link href="http://localhost:4000/jekyll/update/2024/12/15/welcome-to-jekyll.html" rel="alternate" type="text/html" title="Welcome to Jekyll!" /><published>2024-12-15T15:31:14+09:00</published><updated>2024-12-15T15:31:14+09:00</updated><id>http://localhost:4000/jekyll/update/2024/12/15/welcome-to-jekyll</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2024/12/15/welcome-to-jekyll.html"><![CDATA[<p>You’ll find this post in your <code class="language-plaintext highlighter-rouge">_posts</code> directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run <code class="language-plaintext highlighter-rouge">jekyll serve</code>, which launches a web server and auto-regenerates your site when a file is updated.</p>
+
+<p>Jekyll requires blog post files to be named according to the following format:</p>
+
+<p><code class="language-plaintext highlighter-rouge">YEAR-MONTH-DAY-title.MARKUP</code></p>
+
+<p>Where <code class="language-plaintext highlighter-rouge">YEAR</code> is a four-digit number, <code class="language-plaintext highlighter-rouge">MONTH</code> and <code class="language-plaintext highlighter-rouge">DAY</code> are both two-digit numbers, and <code class="language-plaintext highlighter-rouge">MARKUP</code> is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.</p>
+
+<p>Jekyll also offers powerful support for code snippets:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">print_hi</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+  <span class="nb">puts</span> <span class="s2">"Hi, </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">"</span>
+<span class="k">end</span>
+<span class="n">print_hi</span><span class="p">(</span><span class="s1">'Tom'</span><span class="p">)</span>
+<span class="c1">#=&gt; prints 'Hi, Tom' to STDOUT.</span></code></pre></figure>
+
+<p>Check out the <a href="https://jekyllrb.com/docs/home">Jekyll docs</a> for more info on how to get the most out of Jekyll. File all bugs/feature requests at <a href="https://github.com/jekyll/jekyll">Jekyll’s GitHub repo</a>. If you have questions, you can ask them on <a href="https://talk.jekyllrb.com/">Jekyll Talk</a>.</p>]]></content><author><name></name></author><category term="jekyll" /><category term="update" /><summary type="html"><![CDATA[You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run jekyll serve, which launches a web server and auto-regenerates your site when a file is updated.]]></summary></entry></feed>
